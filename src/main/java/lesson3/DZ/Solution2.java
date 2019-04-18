@@ -33,6 +33,54 @@ public class Solution2 {
         }
     }
 
+    private static void testDeleteByIdPerformance() {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM PRODUCT WHERE ID = ?")) {
+
+            for (int i = 0; i <= 1000; i++) {
+                preparedStatement.setLong(1, i);
+                int res = preparedStatement.executeUpdate();
+                System.out.println("Save was finished with result " + res);
+            }
+        } catch (SQLException e) {
+            System.err.println("Something went wrong");
+            e.printStackTrace();
+        }
+    }
+
+    private static void testDeletePerformance() {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("DELETE * FROM PRODUCT")) {
+        } catch (SQLException e) {
+            System.err.println("Something went wrong");
+            e.printStackTrace();
+        }
+    }
+
+    private static void testSelectByIdPerformance() {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT FROM PRODUCT WHERE ID = ?")) {
+
+            for (int i = 0; i <= 1000; i++) {
+                preparedStatement.setLong(1, i);
+                int res = preparedStatement.executeUpdate();
+                System.out.println("Save was finished with result " + res);
+            }
+        } catch (SQLException e) {
+            System.err.println("Something went wrong");
+            e.printStackTrace();
+        }
+    }
+
+    private static void testSelectPerformance() {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM PRODUCT")) {
+        } catch (SQLException e) {
+            System.err.println("Something went wrong");
+            e.printStackTrace();
+        }
+    }
+
     private static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(DB_URL, USER, PASS);
     }
