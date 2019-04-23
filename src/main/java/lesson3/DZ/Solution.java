@@ -14,12 +14,15 @@ public class Solution {
 
     private static List<Product> findProductByPrice(int price, int delta) {
         try (Connection connection = getConnection();
-             Statement statement = connection.createStatement()) {
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM PRODUCT WHERE PRICE BETWEEN ? AND ?")) {
 
-            int max = price + delta;
             int min = price - delta;
+            int max = price + delta;
 
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM PRODUCT WHERE PRICE BETWEEN " + min + " AND " + max);
+            preparedStatement.setInt(min, 1);
+            preparedStatement.setInt(max, 2);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             List<Product> products = new ArrayList<>();
             while (resultSet.next()) {
@@ -38,17 +41,17 @@ public class Solution {
     private static List<Product> findProductByName(String word) throws Exception {
         validateWord(word);
         try (Connection connection = getConnection();
-             Statement statement = connection.createStatement()) {
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM PRODUCT WHERE NAME = ?")) {
 
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM PRODUCT");
+            preparedStatement.setString(1, word);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             List<Product> products = new ArrayList<>();
             while (resultSet.next()) {
-                if (resultSet.getString(2).contains(word)){
-                    Product product = new Product(resultSet.getLong(1), resultSet.getString(2),
-                            resultSet.getString(3), resultSet.getInt(4));
-                    products.add(product);
-                }
+                Product product = new Product(resultSet.getLong(1), resultSet.getString(2),
+                        resultSet.getString(3), resultSet.getInt(4));
+                products.add(product);
             }
             return products;
         } catch (SQLException e) {
@@ -60,17 +63,17 @@ public class Solution {
 
     private static List<Product> findProductsWithEmptyDescription() {
         try (Connection connection = getConnection();
-             Statement statement = connection.createStatement()) {
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM PRODUCT WHERE DESCRIPTION = ?")) {
 
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM PRODUCT");
+            preparedStatement.setString(1, "");
+
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             List<Product> products = new ArrayList<>();
             while (resultSet.next()) {
-                if (resultSet.getString(3).isEmpty()){
-                    Product product = new Product(resultSet.getLong(1), resultSet.getString(2),
-                            resultSet.getString(3), resultSet.getInt(4));
-                    products.add(product);
-                }
+                Product product = new Product(resultSet.getLong(1), resultSet.getString(2),
+                        resultSet.getString(3), resultSet.getInt(4));
+                products.add(product);
             }
             return products;
         } catch (SQLException e) {
@@ -84,9 +87,9 @@ public class Solution {
         return DriverManager.getConnection(DB_URL, USER, PASS);
     }
 
-    private static void validateWord(String word) throws Exception{
+    private static void validateWord(String word) throws Exception {
         String regex = "a-z~@#$%^&*:;<>.,/}{+";
-        if(word.contains(" ") || word.length() < 3 || word.matches("[" + regex + "]"))
+        if (word.contains(" ") || word.length() < 3 || word.matches("[" + regex + "]"))
             throw new Exception("Word - " + word + "isn't correct");
     }
 }
