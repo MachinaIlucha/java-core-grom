@@ -12,6 +12,10 @@ public class Solution {
     private static final String USER = "B1te";
     private static final String PASS = "*****";
 
+    public static void main(String[] args) throws Exception {
+        System.out.println(findProductByPrice(390,10).toString());
+    }
+
     private static List<Product> findProductByPrice(int price, int delta) {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM PRODUCT WHERE PRICE BETWEEN ? AND ?")) {
@@ -19,8 +23,8 @@ public class Solution {
             int min = price - delta;
             int max = price + delta;
 
-            preparedStatement.setInt(min, 1);
-            preparedStatement.setInt(max, 2);
+            preparedStatement.setInt(1, min);
+            preparedStatement.setInt(2, max);
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -65,7 +69,7 @@ public class Solution {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM PRODUCT WHERE DESCRIPTION = ?")) {
 
-            preparedStatement.setString(1, "");
+            preparedStatement.setString(1, null);
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
