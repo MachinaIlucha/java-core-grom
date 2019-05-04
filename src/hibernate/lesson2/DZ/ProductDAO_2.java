@@ -1,16 +1,13 @@
 package hibernate.lesson2.DZ;
 
 import hibernate.lesson2.Product;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import org.hibernate.*;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
 import java.util.List;
 
-public class ProductDAO {
+public class ProductDAO_2 {
 
     private static SessionFactory sessionFactory;
 
@@ -25,9 +22,10 @@ public class ProductDAO {
             tr.begin();
 
             //action
-            Query query = session.createQuery("FROM Product WHERE id = :id");
-            query.setParameter("id", id);
-            product = (Product) query.getSingleResult();
+            SQLQuery sqlQuery = session.createSQLQuery("SELECT * FROM Product WHERE ID = ?");
+            sqlQuery.addEntity(Product.class);
+            sqlQuery.setParameter(1, id);
+            product = (Product) sqlQuery.getSingleResult();
 
 
             //close session/tr
@@ -56,9 +54,10 @@ public class ProductDAO {
             tr.begin();
 
             //action
-            Query query = session.createQuery("FROM Product WHERE name = :name");
-            query.setParameter("name", name);
-            product = (Product) query.getSingleResult();
+            SQLQuery sqlQuery = session.createSQLQuery("SELECT * FROM Product WHERE name = ?");
+            sqlQuery.addEntity(Product.class);
+            sqlQuery.setParameter(1, name);
+            product = (Product) sqlQuery.getSingleResult();
 
 
             //close session/tr
@@ -88,9 +87,8 @@ public class ProductDAO {
             tr.begin();
 
             //action
-            Query query = session.createQuery("FROM Product WHERE name LIKE :name");
-            query.setParameter("name", "%" + name + "%");
-            list = query.list();
+            Query query = session.createSQLQuery("SELECT * FROM PRODUCT WHERE NAME like :name").addEntity(Product.class);
+            list = query.setString("name", name).list();
 
             //close session/tr
             tr.commit();
@@ -119,10 +117,10 @@ public class ProductDAO {
             tr.begin();
 
             //action
-            Query query = session.createQuery("FROM Product WHERE price between :minprice and :maxprice");
-            query.setParameter("minprice", price - delta);
-            query.setParameter("maxprice", price + delta);
-            list = query.list();
+            SQLQuery sqlQuery = session.createSQLQuery("SELECT * FROM Product WHERE price between ? and ?").addEntity(Product.class);
+            sqlQuery.setInteger(1, price - delta);
+            sqlQuery.setInteger(2, price + delta);
+            list = sqlQuery.list();
 
             //close session/tr
             tr.commit();
@@ -151,9 +149,9 @@ public class ProductDAO {
             tr.begin();
 
             //action
-            Query query = session.createQuery("FROM Product WHERE name LIKE :name ORDER BY name ASC");
-            query.setParameter("name", "%" + name + "%");
-            list = query.list();
+            SQLQuery sqlQuery = session.createSQLQuery("SELECT * FROM Product WHERE NAME LIKE :name ORDER BY price ASC ").addEntity(Product.class);
+            sqlQuery.setString("name", name);
+            list = sqlQuery.list();
 
             //close session/tr
             tr.commit();
@@ -182,9 +180,10 @@ public class ProductDAO {
             tr.begin();
 
             //action
-            Query query = session.createQuery("FROM Product WHERE name LIKE :name ORDER BY name DESC");
-            query.setParameter("name", "%" + name + "%");
-            list = query.list();
+            SQLQuery sqlQuery = session.createSQLQuery("SELECT * FROM Product WHERE NAME LIKE :name ORDER BY price DESC").addEntity(Product.class);
+            sqlQuery.setString("name", name);
+            list = sqlQuery.list();
+
 
             //close session/tr
             tr.commit();
@@ -213,10 +212,10 @@ public class ProductDAO {
             tr.begin();
 
             //action
-            Query query = session.createQuery("FROM Product WHERE price between :minprice and :maxprice ORDER BY price DESC");
-            query.setParameter("minprice", price - delta);
-            query.setParameter("maxprice", price + delta);
-            list = query.list();
+            SQLQuery sqlQuery = session.createSQLQuery("SELECT * FROM Product WHERE price between ? and ? ORDER BY price DESC").addEntity(Product.class);
+            sqlQuery.setInteger(1, price - delta);
+            sqlQuery.setInteger(2, price + delta);
+            list = sqlQuery.list();
 
             //close session/tr
             tr.commit();
