@@ -14,11 +14,10 @@ public class Room {
     private int PETSALLOWED;
     private Date DATEAVAILABLEFROM;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="HOTEL_ID")
     private Hotel hotel;
 
     @Id
+    @SequenceGenerator(name = "PR_SEQ", sequenceName = "PRODUCT_SEQ", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PR_SEQ")
     @Column(name = "ROOM_ID")
     public long getROOM_ID() {
@@ -74,7 +73,8 @@ public class Room {
         this.DATEAVAILABLEFROM = DATEAVAILABLEFROM;
     }
 
-    @Column(name = "HOTEL_ID")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "HOTEL_ID")
     public Hotel getHotel() {
         return hotel;
     }

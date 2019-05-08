@@ -13,6 +13,7 @@ public class Hotel {
     private String STREET;
 
     @Id
+    @SequenceGenerator(name = "PR_SEQ", sequenceName = "PRODUCT_SEQ", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PR_SEQ")
     @Column(name = "HOTEL_ID")
     public long getHOTEL_ID() {
