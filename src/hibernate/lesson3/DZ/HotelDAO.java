@@ -13,10 +13,8 @@ public class HotelDAO {
 
     public static void save(Hotel hotel) {
         //create session/tr
-        Session session = null;
         Transaction tr = null;
-        try {
-            session = createSession().openSession();
+        try (Session session = createSession().openSession()) {
             tr = session.getTransaction();
             tr.begin();
 
@@ -31,18 +29,13 @@ public class HotelDAO {
 
             if (tr != null)
                 tr.rollback();
-        } finally {
-            if (session != null)
-                session.close();
         }
     }
 
     public static Hotel update(Hotel hotel) {
         //create session/tr
-        Session session = null;
         Transaction tr = null;
-        try {
-            session = createSession().openSession();
+        try (Session session = createSession().openSession()) {
             tr = session.getTransaction();
             tr.begin();
 
@@ -57,19 +50,14 @@ public class HotelDAO {
 
             if (tr != null)
                 tr.rollback();
-        } finally {
-            if (session != null)
-                session.close();
         }
         return hotel;
     }
 
     public static Hotel delete(Hotel hotel) {
         //create session/tr
-        Session session = null;
         Transaction tr = null;
-        try {
-            session = createSession().openSession();
+        try (Session session = createSession().openSession()) {
             tr = session.getTransaction();
             tr.begin();
 
@@ -84,20 +72,15 @@ public class HotelDAO {
 
             if (tr != null)
                 tr.rollback();
-        } finally {
-            if (session != null)
-                session.close();
         }
         return hotel;
     }
 
     public static Hotel findById(Long id) {
         //create session/tr
-        Session session = null;
         Transaction tr = null;
         Hotel hotel = null;
-        try {
-            session = createSession().openSession();
+        try (Session session = createSession().openSession()) {
             tr = session.getTransaction();
             tr.begin();
 
@@ -115,9 +98,6 @@ public class HotelDAO {
 
             if (tr != null)
                 tr.rollback();
-        } finally {
-            if (session != null)
-                session.close();
         }
         return hotel;
     }

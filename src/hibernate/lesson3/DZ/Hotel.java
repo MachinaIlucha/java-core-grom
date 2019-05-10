@@ -6,57 +6,60 @@ import javax.persistence.*;
 @Table(name = "HOTELS")
 public class Hotel {
 
-    private long HOTEL_ID;
-    private String NAMEOFHOTEL;
-    private String COUNTRY;
-    private String CITY;
-    private String STREET;
+    private Long hotel_id;
+    private String name;
+    private String country;
+    private String city;
+    private String street;
 
-    @Id
-    @SequenceGenerator(name = "PR_SEQ", sequenceName = "PRODUCT_SEQ", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PR_SEQ")
-    @Column(name = "HOTEL_ID")
-    public long getHOTEL_ID() {
-        return HOTEL_ID;
+    public Hotel() {
     }
 
-    public void setHOTEL_ID(long HOTEL_ID) {
-        this.HOTEL_ID = HOTEL_ID;
+    @Id
+    @SequenceGenerator(name = "PR_SEQ", sequenceName = "HOTEL_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PR_SEQ")
+    @Column(name = "HOTEL_ID")
+    public Long getHotel_id() {
+        return hotel_id;
     }
 
     @Column(name = "NAMEOFHOTEL")
-    public String getNAMEOFHOTEL() {
-        return NAMEOFHOTEL;
-    }
-
-    public void setNAMEOFHOTEL(String NAMEOFHOTEL) {
-        this.NAMEOFHOTEL = NAMEOFHOTEL;
+    public String getName() {
+        return name;
     }
 
     @Column(name = "COUNTRY")
-    public String getCOUNTRY() {
-        return COUNTRY;
-    }
-
-    public void setCOUNTRY(String COUNTRY) {
-        this.COUNTRY = COUNTRY;
+    public String getCountry() {
+        return country;
     }
 
     @Column(name = "CITY")
-    public String getCITY() {
-        return CITY;
-    }
-
-    public void setCITY(String CITY) {
-        this.CITY = CITY;
+    public String getCity() {
+        return city;
     }
 
     @Column(name = "STREET")
-    public String getSTREET() {
-        return STREET;
+    public String getStreet() {
+        return street;
     }
 
-    public void setSTREET(String STREET) {
-        this.STREET = STREET;
+    public void setHotel_id(Long hotel_id) {
+        this.hotel_id = hotel_id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
     }
 }

@@ -7,76 +7,79 @@ import java.util.Date;
 @Table(name = "ROOMS")
 public class Room {
 
-    private long ROOM_ID;
-    private int NUMBEROFGUESTS;
-    private double PRICE;
-    private int BREAKFASTINCLUDED;
-    private int PETSALLOWED;
-    private Date DATEAVAILABLEFROM;
+    private long room_id;
+    private int numberofguest;
+    private double price;
+    private int breakfastincluded;
+    private int petsallowed;
+    private Date dateavaible;
 
     private Hotel hotel;
+
+    public Room() {
+    }
 
     @Id
     @SequenceGenerator(name = "PR_SEQ", sequenceName = "PRODUCT_SEQ", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PR_SEQ")
     @Column(name = "ROOM_ID")
-    public long getROOM_ID() {
-        return ROOM_ID;
-    }
-
-    public void setROOM_ID(long ROOM_ID) {
-        this.ROOM_ID = ROOM_ID;
+    public long getRoom_id() {
+        return room_id;
     }
 
     @Column(name = "NUMBEROFGUESTS")
-    public int getNUMBEROFGUESTS() {
-        return NUMBEROFGUESTS;
-    }
-
-    public void setNUMBEROFGUESTS(int NUMBEROFGUESTS) {
-        this.NUMBEROFGUESTS = NUMBEROFGUESTS;
+    public int getNumberofguest() {
+        return numberofguest;
     }
 
     @Column(name = "PRICE")
-    public double getPRICE() {
-        return PRICE;
-    }
-
-    public void setPRICE(double PRICE) {
-        this.PRICE = PRICE;
+    public double getPrice() {
+        return price;
     }
 
     @Column(name = "BREAKFASTINCLUDED")
-    public int getBREAKFASTINCLUDED() {
-        return BREAKFASTINCLUDED;
-    }
-
-    public void setBREAKFASTINCLUDED(int BREAKFASTINCLUDED) {
-        this.BREAKFASTINCLUDED = BREAKFASTINCLUDED;
+    public int getBreakfastincluded() {
+        return breakfastincluded;
     }
 
     @Column(name = "PETSALLOWED")
-    public int getPETSALLOWED() {
-        return PETSALLOWED;
-    }
-
-    public void setPETSALLOWED(int PETSALLOWED) {
-        this.PETSALLOWED = PETSALLOWED;
+    public int getPetsallowed() {
+        return petsallowed;
     }
 
     @Column(name = "DATEAVAILABLEFROM")
-    public Date getDATEAVAILABLEFROM() {
-        return DATEAVAILABLEFROM;
+    public Date getDateavaible() {
+        return dateavaible;
     }
 
-    public void setDATEAVAILABLEFROM(Date DATEAVAILABLEFROM) {
-        this.DATEAVAILABLEFROM = DATEAVAILABLEFROM;
-    }
-
-    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "HOTEL_ID")
+    @OneToOne(cascade = CascadeType.ALL)
     public Hotel getHotel() {
         return hotel;
+    }
+
+    public void setRoom_id(long room_id) {
+        this.room_id = room_id;
+    }
+
+    public void setNumberofguest(int numberofguest) {
+        this.numberofguest = numberofguest;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setBreakfastincluded(int breakfastincluded) {
+        this.breakfastincluded = breakfastincluded;
+    }
+
+    public void setPetsallowed(int petsallowed) {
+        this.petsallowed = petsallowed;
+    }
+
+    public void setDateavaible(Date dateavaible) {
+        this.dateavaible = dateavaible;
     }
 
     public void setHotel(Hotel hotel) {
