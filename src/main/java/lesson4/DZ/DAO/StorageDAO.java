@@ -1,6 +1,5 @@
 package lesson4.DZ.DAO;
 
-import lesson4.DZ.model.File;
 import lesson4.DZ.model.Storage;
 
 import java.sql.*;
@@ -11,10 +10,15 @@ public class StorageDAO {
     private static final String USER = "B1te";
     private static final String PASS = "*****";
 
+    private static String saveStatement = "INSERT INTO STORAGE (ID, " +
+            "FORMATSSUPPORTED, STORAGECOUNTRY, STORAGEMAXSIZE) VALUES (?, ?, ?, ?)";
+    private static String deleteStatement = "DELETE FROM STORAGE WHERE ID =";
+    private static String updateStatement = "UPDATE STORAGE SET FORMATSSUPPORTED = ? , STORAGECOUNTRY = ?, STORAGEMAXSIZE = ? WHERE ID = ";
+    private static String findByStatement = "SELECT * FROM STORAGE WHERE ID =";
+
     public Storage save(Storage storage) {
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO STORAGE (ID, " +
-                     "FORMATSSUPPORTED, STORAGECOUNTRY, STORAGEMAXSIZE) VALUES (?, ?, ?, ?)")) {
+             PreparedStatement preparedStatement = connection.prepareStatement(saveStatement)) {
 
             preparedStatement.setLong(1, storage.getId());
             preparedStatement.setString(2, getLineOfFormats(storage.getFormatsSupported()));
@@ -32,7 +36,7 @@ public class StorageDAO {
 
     public void delete(long id) {
         try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
-            statement.executeUpdate("DELETE FROM STORAGE WHERE ID =" + id);
+            statement.executeUpdate(deleteStatement + id);
         } catch (SQLException e) {
             System.err.println("Something went wrong");
             e.printStackTrace();
@@ -41,7 +45,7 @@ public class StorageDAO {
 
     public Storage update(Storage storage) {
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE STORAGE SET FORMATSSUPPORTED = ? , STORAGECOUNTRY = ?, STORAGEMAXSIZE = ? WHERE ID = " + storage.getId())) {
+             PreparedStatement preparedStatement = connection.prepareStatement(updateStatement + storage.getId())) {
 
             preparedStatement.setString(1, getLineOfFormats(storage.getFormatsSupported()));
             preparedStatement.setString(2, storage.getStorageCountry());
@@ -58,7 +62,7 @@ public class StorageDAO {
 
     public static Storage findById(long id) {
         try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
-            try (ResultSet resultSet = statement.executeQuery("SELECT * FROM STORAGE WHERE ID =" + id)) {
+            try (ResultSet resultSet = statement.executeQuery(findByStatement + id)) {
                 Storage storage = new Storage(resultSet.getLong(1), resultSet.getString(2).split(" "), resultSet.getString(3), resultSet.getLong(4));
                 return storage;
             }

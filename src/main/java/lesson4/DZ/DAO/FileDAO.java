@@ -13,12 +13,19 @@ public class FileDAO {
     private static final String USER = "B1te";
     private static final String PASS = "*****";
 
+    private static String saveStatement = "INSERT INTO TABLE_FILE (ID, NAME, FORMAT, SIZE, STORAGE_ID) VALUES (?, ?, ?, ?, ?)";
+    private static String deleteStatement = "DELETE FROM TABLE_FILE WHERE ID =";
+    private static String updateStatement = "UPDATE TABLE_FILE SET NAME = ? , FORMAT = ?, SIZE = ? , STORAGE_ID = ? WHERE ID = ";
+    private static String findByStatement = "SELECT * FROM TABLE_FILE WHERE ID =";
+    private static String getFilesStatement = "SELECT * FROM TABLE_FILE WHERE STORAGE_ID =";
+    private static String validateFileStatement = "SELECT * FROM TABLE_FILE";
+
     public static File save(Storage storage, File file) throws Exception {
 
         validateFile(file, storage);
 
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO TABLE_FILE (ID, NAME, FORMAT, SIZE, STORAGE_ID) VALUES (?, ?, ?, ?, ?)")) {
+             PreparedStatement preparedStatement = connection.prepareStatement(saveStatement)) {
 
             preparedStatement.setLong(1, file.getId());
             preparedStatement.setString(2, file.getName());
@@ -37,7 +44,7 @@ public class FileDAO {
 
     public static void delete(long id) {
         try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
-            statement.executeUpdate("DELETE FROM TABLE_FILE WHERE ID =" + id);
+            statement.executeUpdate(deleteStatement + id);
         } catch (SQLException e) {
             System.err.println("Something went wrong");
             e.printStackTrace();
@@ -46,7 +53,7 @@ public class FileDAO {
 
     public static File update(File file) {
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE TABLE_FILE SET NAME = ? , FORMAT = ?, SIZE = ? , STORAGE_ID = ? WHERE ID = " + file.getId())) {
+             PreparedStatement preparedStatement = connection.prepareStatement(updateStatement + file.getId())) {
 
             preparedStatement.setString(1, file.getName());
             preparedStatement.setString(2, file.getFormat());
@@ -64,7 +71,7 @@ public class FileDAO {
 
     public static File findById(long id) {
         try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
-            try (ResultSet resultSet = statement.executeQuery("SELECT * FROM TABLE_FILE WHERE ID =" + id)) {
+            try (ResultSet resultSet = statement.executeQuery(findByStatement + id)) {
                 File file = new File(resultSet.getLong(1), resultSet.getString(2), resultSet.getString(3),
                         resultSet.getLong(4), StorageDAO.findById(resultSet.getLong(5)));
                 return file;
@@ -77,7 +84,8 @@ public class FileDAO {
     }
 
     public static void transferAll(Storage storageFrom, Storage storageTo) throws Exception {
-        List<File> files; files = getFiles(storageFrom.getId());
+        List<File> files;
+        files = getFiles(storageFrom.getId());
         for (File file : files) {
             validateFile(file, storageTo);
             file.setStorage(storageTo);
@@ -123,7 +131,7 @@ public class FileDAO {
 
         /*******************************************************************************************************/
         try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
-            try (ResultSet resultSet = statement.executeQuery("SELECT * FROM TABLE_FILE")) {
+            try (ResultSet resultSet = statement.executeQuery(validateFileStatement)) {
                 if (resultSet.next()) {
                     size = size + resultSet.getLong(4);
                 }
@@ -143,7 +151,7 @@ public class FileDAO {
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement()) {
 
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM TABLE_FILE WHERE STORAGE_ID =" + storage_id);
+            ResultSet resultSet = statement.executeQuery(getFilesStatement + storage_id);
 
             List<File> files = new ArrayList<>();
             while (resultSet.next()) {
